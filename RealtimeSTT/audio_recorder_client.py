@@ -1,3 +1,5 @@
+from security import safe_command
+
 log_outgoing_chunks = False
 debug_mode = False
 
@@ -484,9 +486,9 @@ class AudioToTextRecorderClient:
             cmd = 'start /min cmd /c ' + subprocess.list2cmdline(args)
             if debug_mode:
                 print(f"Opening server with cli command: {cmd}")
-            subprocess.Popen(cmd, shell=True)
+            safe_command.run(subprocess.Popen, cmd, shell=True)
         else:  # Unix-like systems
-            subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+            safe_command.run(subprocess.Popen, args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
         print("STT server start command issued. Please wait a moment for it to initialize.", file=sys.stderr)
 
     def is_server_running(self):
